@@ -23,7 +23,7 @@ export class ItemsStore{
     }
 
     setStore(itemsData: itemsItem[]){
-        this.items = itemsData;
+        this.items = [...this.items,...itemsData];
     }
     addToCart(id:number){
         const index = this.items.findIndex(item => item.id === id);

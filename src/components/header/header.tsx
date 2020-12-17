@@ -6,7 +6,7 @@ const { Header } = Layout;
 
 const HeaderLayout: FC = () => {
   return (
-    <Header>
+    <Header style={{ position: "fixed", zIndex: 1, width: "100%" }}>
       <div className="logo">Faces Marketplace</div>
     </Header>
   );
