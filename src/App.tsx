@@ -19,20 +19,12 @@ interface itemsItem {
 }
 
 interface AdsItem {
-  id: number;
   title: string;
   description: string;
-  dateAdded: Date;
 }
 
 function App() {
-  const [adsIndex, setAdsIndex] = useState(0);
-  const [currentAd, setCurrentAd] = useState<AdsItem>({
-    id: 0,
-    title: "",
-    description: "",
-    dateAdded: new Date(),
-  });
+  const [currentAds, setCurrentAds] = useState<AdsItem[]>([]);
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [arrayIndex, setarrayIndex] = useState(0);
@@ -54,17 +46,8 @@ function App() {
         return response.json();
       })
       .then(function (myJson) {
-        let randomIndex = getRandomIndex(myJson.length);
-        while (adsIndex == randomIndex) {
-          randomIndex = getRandomIndex(myJson.length);
-        }
-        setAdsIndex(randomIndex);
-        setCurrentAd(myJson[adsIndex]);
+        setCurrentAds(myJson);
       });
-  };
-
-  const getRandomIndex = (index: number) => {
-    return Math.floor(Math.random() * index);
   };
 
   const getData = () => {
@@ -85,8 +68,8 @@ function App() {
     }, 1000);
   };
   useEffect(() => {
-    getData();
     getAds();
+    getData();
   }, []);
 
   return (
@@ -96,7 +79,6 @@ function App() {
         dataLength={itemsStore.items.length} //This is important field to render the next data
         next={() => {
           getData();
-          getAds();
         }}
         hasMore={hasMore}
         loader={
@@ -107,15 +89,14 @@ function App() {
               alignItems: "center",
             }}
           >
-            <Spin /> <p> Loading Data ... </p>
+            <Spin /> <p style={{ marginLeft: "15px" }}> Loading Data ... </p>
           </div>
         }
       >
         <ContentLayout
           isLoading={isLoading}
           itemsStore={itemsStore}
-          adsTitle={currentAd.title}
-          adsDescription={currentAd.description}
+          Advert={currentAds}
         />
       </InfiniteScroll>
       <br />

@@ -1,5 +1,5 @@
-import React, { FC, useEffect, useState } from "react";
-import { Skeleton, Card, InputNumber, Button, Alert } from "antd";
+import React, { FC, useState } from "react";
+import { Skeleton, Card, InputNumber, Button } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import "./card.scss";
 

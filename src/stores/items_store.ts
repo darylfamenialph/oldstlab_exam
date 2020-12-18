@@ -23,7 +23,9 @@ export class ItemsStore{
     }
 
     setStore(itemsData: itemsItem[]){
-        this.items = [...this.items,...itemsData];
+        itemsData.forEach((data)=>{
+            this.items.push(data);
+        });
     }
     addToCart(id:number){
         const index = this.items.findIndex(item => item.id === id);

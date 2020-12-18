@@ -1,5 +1,5 @@
-import React, { FC } from "react";
-import { Layout, Row, Switch } from "antd";
+import React, { FC, useEffect, useState } from "react";
+import { Layout, Row } from "antd";
 import Cards from "./card/card";
 import "./content.scss";
 import { ItemsStore } from "../../stores/items_store";
@@ -12,8 +12,11 @@ const { Content } = Layout;
 interface itemsStoreType {
   itemsStore: ItemsStore;
   isLoading: boolean;
-  adsTitle: string;
-  adsDescription: string;
+  Advert: AdsItem[];
+}
+interface AdsItem {
+  title: string;
+  description: string;
 }
 
 const getRelativeTime = (date: Date) => {
@@ -29,8 +32,9 @@ const getRelativeTime = (date: Date) => {
 };
 
 const ContentLayout: FC<itemsStoreType> = observer(
-  ({ itemsStore, isLoading, adsTitle, adsDescription }) => {
+  ({ itemsStore, isLoading, Advert }) => {
     let itemCount = 0;
+
     return (
       <Content className="content">
         <Row className="Card-content">
@@ -53,7 +57,7 @@ const ContentLayout: FC<itemsStoreType> = observer(
                 dateAdded={getRelativeTime(item.dateAdded).toString()}
               />
             ) : (
-              <Ads Title={adsTitle} Description={adsDescription} />
+              <Ads ads={Advert} />
             );
           })}
         </Row>
