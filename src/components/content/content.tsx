@@ -5,12 +5,15 @@ import "./content.scss";
 import { ItemsStore } from "../../stores/items_store";
 import { observer } from "mobx-react";
 import moment from "moment";
+import Ads from "./advertisement/ads";
 
 const { Content } = Layout;
 
 interface itemsStoreType {
   itemsStore: ItemsStore;
   isLoading: boolean;
+  adsTitle: string;
+  adsDescription: string;
 }
 
 const getRelativeTime = (date: Date) => {
@@ -26,12 +29,16 @@ const getRelativeTime = (date: Date) => {
 };
 
 const ContentLayout: FC<itemsStoreType> = observer(
-  ({ itemsStore, isLoading }) => {
+  ({ itemsStore, isLoading, adsTitle, adsDescription }) => {
+    let itemCount = 0;
     return (
       <Content className="content">
         <Row className="Card-content">
           {itemsStore.items.map((item) => {
-            return (
+            itemCount++;
+            let remainder = itemCount % 20;
+
+            return remainder != 0 ? (
               <Cards
                 key={item.id}
                 itemId={item.id}
@@ -45,6 +52,8 @@ const ContentLayout: FC<itemsStoreType> = observer(
                 isAddedToCart={item.isAdded}
                 dateAdded={getRelativeTime(item.dateAdded).toString()}
               />
+            ) : (
+              <Ads Title={adsTitle} Description={adsDescription} />
             );
           })}
         </Row>

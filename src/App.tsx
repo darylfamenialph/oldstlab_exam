@@ -18,7 +18,21 @@ interface itemsItem {
   isAdded: boolean;
 }
 
+interface AdsItem {
+  id: number;
+  title: string;
+  description: string;
+  dateAdded: Date;
+}
+
 function App() {
+  const [adsIndex, setAdsIndex] = useState(0);
+  const [currentAd, setCurrentAd] = useState<AdsItem>({
+    id: 0,
+    title: "",
+    description: "",
+    dateAdded: new Date(),
+  });
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [arrayIndex, setarrayIndex] = useState(0);
@@ -27,6 +41,30 @@ function App() {
     setarrayIndex(arrayIndex + 1);
     arrayIndex === 2 ? setHasMore(false) : setHasMore(true);
     setIsLoading(false);
+  };
+
+  const getAds = () => {
+    fetch("ads.json", {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    })
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (myJson) {
+        let randomIndex = getRandomIndex(myJson.length);
+        while (adsIndex == randomIndex) {
+          randomIndex = getRandomIndex(myJson.length);
+        }
+        setAdsIndex(randomIndex);
+        setCurrentAd(myJson[adsIndex]);
+      });
+  };
+
+  const getRandomIndex = (index: number) => {
+    return Math.floor(Math.random() * index);
   };
 
   const getData = () => {
@@ -48,7 +86,9 @@ function App() {
   };
   useEffect(() => {
     getData();
+    getAds();
   }, []);
+
   return (
     <Layout className="layout">
       <HeaderLayout />
@@ -56,6 +96,7 @@ function App() {
         dataLength={itemsStore.items.length} //This is important field to render the next data
         next={() => {
           getData();
+          getAds();
         }}
         hasMore={hasMore}
         loader={
@@ -70,11 +111,16 @@ function App() {
           </div>
         }
       >
-        <ContentLayout isLoading={isLoading} itemsStore={itemsStore} />
+        <ContentLayout
+          isLoading={isLoading}
+          itemsStore={itemsStore}
+          adsTitle={currentAd.title}
+          adsDescription={currentAd.description}
+        />
       </InfiniteScroll>
       <br />
       {!hasMore ? (
-        <div style={{ textAlign: "center" }}>--- No Data to Load ---</div>
+        <div style={{ textAlign: "center" }}>~ end of catalogue ~</div>
       ) : (
         ""
       )}
