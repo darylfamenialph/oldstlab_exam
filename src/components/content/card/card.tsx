@@ -12,6 +12,7 @@ type CardContentType = {
   Description: string;
   Price: number;
   isAddedToCart: boolean;
+  dateAdded: string;
   addToCart: (id: number) => void;
 };
 
@@ -23,6 +24,7 @@ const Cards: FC<CardContentType> = ({
   itemId,
   addToCart,
   isAddedToCart,
+  dateAdded,
 }) => {
   const [fontSize, setFontSize] = useState(14);
   const onChange = (value: any) => {
@@ -68,7 +70,12 @@ const Cards: FC<CardContentType> = ({
       <Skeleton loading={Loading} active>
         <Meta
           title={Title}
-          description={<p style={{ fontSize: fontSize }}>{Description}</p>}
+          description={
+            <div>
+              <p style={{ fontSize: fontSize, color: "#000" }}>{Description}</p>
+              <p className="relative-date">Added {dateAdded}</p>
+            </div>
+          }
         />
       </Skeleton>
     </Card>

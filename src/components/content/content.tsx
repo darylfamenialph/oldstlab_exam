@@ -4,6 +4,7 @@ import Cards from "./card/card";
 import "./content.scss";
 import { ItemsStore } from "../../stores/items_store";
 import { observer } from "mobx-react";
+import moment from "moment";
 
 const { Content } = Layout;
 
@@ -11,6 +12,18 @@ interface itemsStoreType {
   itemsStore: ItemsStore;
   isLoading: boolean;
 }
+
+const getRelativeTime = (date: Date) => {
+  let dateAdded = moment(date, "YYYY-MM-DD hh:mm:ss");
+  let dateToday = moment(new Date(), "YYYY-MM-DD hh:mm:ss");
+  let dateDiff = dateToday.diff(dateAdded, "days");
+  if (dateDiff >= 7) {
+    return date;
+  } else {
+    let relativeDate = moment(date, "YYYYMMDDhhmmss").fromNow();
+    return relativeDate;
+  }
+};
 
 const ContentLayout: FC<itemsStoreType> = observer(
   ({ itemsStore, isLoading }) => {
@@ -30,6 +43,7 @@ const ContentLayout: FC<itemsStoreType> = observer(
                   itemsStore.addToCart(item.id);
                 }}
                 isAddedToCart={item.isAdded}
+                dateAdded={getRelativeTime(item.dateAdded).toString()}
               />
             );
           })}
